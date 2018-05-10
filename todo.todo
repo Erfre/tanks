@@ -1,0 +1,10 @@
+
+
+
+-[] Fix right servo movement
+-[] Revisit servo movement code(should sleep be used when the motor is running)
+-[] Write the laser sensor method
+-[] figure out how hit detection should work(vibrations, laser...)
+-[]
+
+
