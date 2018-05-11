@@ -46,18 +46,16 @@ class controller:
         """
         self.pi.set_servo_pulsewidth(servo, pulse)
         self.servos.append(servo)
-        # maybe I could add multiple servos??
         return
 
     def stop_servos(self):
         """
-
+        Stops all servos which have been activated
         :param servo:
         :return:
         """
-        # this should stop all servos which have been moved
         for servo in self.servos:
-            self.pi.set_servo_pulsewidth(servo)
+            self.pi.set_servo_pulsewidth(servo, 0)
         return
 
     def dir_listener(self, direction):
