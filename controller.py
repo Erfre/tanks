@@ -7,11 +7,11 @@ class controller:
     def __init__(self, right_servo, left_servo, tower_servo, cannon_servo, laser):
         """
 
-        :param right_servo:
-        :param left_servo:
-        :param tower_servo:
-        :param cannon_servo:
-        :param laser:
+        :param right_servo: GPIO pin connector on PI
+        :param left_servo: GPIO pin connector on PI
+        :param tower_servo: GPIO pin connector on PI
+        :param cannon_servo: GPIO pin connector on PI
+        :param laser: GPIO pin connector on PI
         """
         self.r_servo = right_servo
         self.l_servo = left_servo
@@ -20,12 +20,12 @@ class controller:
         self.laser = laser
         self.pi = None
         self.hp = 0
+        self.servos = []
 
     def start(self, hp):
         """
 
-        :param hp:
-        :param server:
+        :param hp: integer value for HP of tank
         :return:
         """
         system("sudo pigpiod")
@@ -40,18 +40,24 @@ class controller:
         :param pulse:
         :return:
         """
-
+        """TODO see what works best when tower servo is in place
+        (move each with function or move all servos in a dict/array
+        
+        """
         self.pi.set_servo_pulsewidth(servo, pulse)
+        self.servos.append(servo)
         # maybe I could add multiple servos??
         return
 
-    def stop(self, servo):
+    def stop_servos(self):
         """
 
         :param servo:
         :return:
         """
-        self.pi.set_servo_pulsewidth(servo, 0)
+        # this should stop all servos which have been moved
+        for servo in self.servos:
+            self.pi.set_servo_pulsewidth(servo)
         return
 
     def dir_listener(self, direction):
@@ -64,26 +70,15 @@ class controller:
             if direction == 'up':
                 self.move(self.r_servo, 500)
                 self.move(self.l_servo, 2500)
-                sleep(1)
-                self.stop(self.l_servo)
-                self.stop(self.r_servo)
             elif direction == 'down':
                 self.move(self.r_servo, 2500)
                 self.move(self.l_servo, 500)
-                sleep(1)
-                self.stop(self.l_servo)
-                self.stop(self.r_servo)
             elif direction == 'left':
                 self.move(self.l_servo, 500)
-                sleep(1)
-                self.stop(self.l_servo)
             elif direction == 'right':
-                print("now im right")
-                self.move(self.r_servo, 1500)
-                sleep(1)
-                self.stop(self.r_servo)
+                self.move(self.r_servo, 500)
         else:
-            if  direction == 't_right':
+            if direction == 't_right':
                 pass
             elif direction == 't_left':
                 pass
@@ -100,3 +95,10 @@ class controller:
         """
         if fire:
             pass  #  activate laser
+
+    def tower_move(self, direction):
+        """
+
+        :param direction:
+        :return:
+        """
