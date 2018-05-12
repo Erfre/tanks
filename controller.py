@@ -1,6 +1,5 @@
 import pigpio
 from os import system
-from time import sleep
 
 class controller:
     """The tank class"""
@@ -93,10 +92,3 @@ class controller:
         """
         if fire:
             pass  #  activate laser
-
-    def tower_move(self, direction):
-        """
-
-        :param direction:
-        :return:
-        """
