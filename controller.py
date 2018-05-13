@@ -1,3 +1,4 @@
+import time
 import pigpio
 from os import system
 
@@ -20,6 +21,8 @@ class controller:
         self.pi = None
         self.hp = 0
         self.servos = []
+        self.servo_timer = None
+        self.servo_direction = None
 
     def start(self, hp):
         """
@@ -30,7 +33,14 @@ class controller:
         system("sudo pigpiod")
         self.hp = hp
         self.pi = pigpio.pi()
-        return print("started")
+    
+    def update(self):
+        
+        if self.servo_timer:
+            if(time.time() - self.servo_timer) > 1:
+                self.stop_servos(self)
+                self.servo_timer = None
+
 
     def move(self, servo, pulse):
         """
@@ -55,6 +65,7 @@ class controller:
         """
         for servo in self.servos:
             self.pi.set_servo_pulsewidth(servo, 0)
+        self.servos = []
         return
 
     def dir_listener(self, direction):

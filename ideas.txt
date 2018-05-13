@@ -1,0 +1,2 @@
+When no input is sent to the tank all the servos has to stop
+So there is no after moment when a key is released
