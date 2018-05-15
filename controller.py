@@ -1,7 +1,7 @@
-import time
+
 import pigpio
 from os import system
-
+import time
 class controller:
     """The tank class"""
     def __init__(self, right_servo, left_servo, tower_servo, cannon_servo, laser):
@@ -38,8 +38,10 @@ class controller:
         
         if self.servo_timer:
             if(time.time() - self.servo_timer) > 1:
-                self.stop_servos(self)
+                self.stop_servos()
                 self.servo_timer = None
+
+                print('stop')
 
 
     def move(self, servo, pulse):
@@ -75,10 +77,10 @@ class controller:
         :return:
         """
         if '_' not in direction:
-            if direction == 'up':
+            if direction == 'down':
                 self.move(self.r_servo, 500)
                 self.move(self.l_servo, 2500)
-            elif direction == 'down':
+            elif direction == 'up':
                 self.move(self.r_servo, 2500)
                 self.move(self.l_servo, 500)
             elif direction == 'left':
@@ -94,6 +96,8 @@ class controller:
                 pass
             elif direction == 't_down':
                 pass
+        
+        self.servo_timer = time.time()
 
     def fire(self, fire):
         """
