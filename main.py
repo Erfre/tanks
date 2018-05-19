@@ -1,15 +1,11 @@
 from controller import controller
 import socket
-from time import sleep
-import select
-from os import system
-import threading
 import sys
+from os import system
 
 tank_thread = None
 
-
-s  = socket.socket()
+s = socket.socket()
 host = '192.168.0.103'
 port = 10000
 s.connect((host, port))
@@ -26,7 +22,7 @@ tank = init()
 
 while True:
     try:
-        message = s.recvfrom(2049)
+        message = s.recvfrom(2048)
         print(message)
         direction = message[0].decode("utf-8")
         print(direction)
@@ -35,10 +31,5 @@ while True:
             tank.dir_listener(direction)
     except (KeyboardInterrupt):
         system("sudo killall pigpiod")
+        s.close()
         sys.exit()
-    
-    print('tert')
-    #direction = input()
-    #if direction:
-    #update(direction)
-    #tank.stop_servos()
