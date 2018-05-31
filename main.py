@@ -32,15 +32,15 @@ tank = init()
 
 while True:
     try:
-
         ready = select.select([s], [], [], 0)
         if ready[0]:
             message = s.recvfrom(1024)
-            print(message)
+
             direction = message[0].decode("utf-8")
             print(direction)
         
             if(direction):
+                print(direction)
                 tank.dir_listener(direction)
             
         tank.update()
