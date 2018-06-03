@@ -66,10 +66,6 @@ class controller:
         self.servo_time = time.time()
         return
 
-    def move_tower(self, servo, pulse):
-        
-        self.pi.set_servo_pulsewidth(servo, pulse)
-    
     def stop_servos(self):
         """
         Stops all servos which have been activated
@@ -102,18 +98,13 @@ class controller:
                 self.move(self.l_servo, 2500)
         else:
             if direction == 'tower_right':
-                
                 if self.t_servo_angle > 550:
                     self.t_servo_angle -= 50
-                    self.move_tower(self.t_servo, self.t_servo_angle) 
-
+                    self.move(self.t_servo, self.t_servo_angle) 
             elif direction == 'tower_left':
-                
-
                 if self.t_servo_angle < 2450:
-                    self.t_servo_angle += 50
-                    self.move_tower(self.t_servo, self.t_servo_angle)
-
+                    self.t_servo_angle += 50  
+                    self.mover(self.t_servo, self.t_servo_angle)
             elif direction == 't_up':
                 pass
             elif direction == 't_down':

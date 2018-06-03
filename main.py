@@ -12,7 +12,7 @@ tank_thread = None
 
 s  = socket.socket()
 
-#host = '192.168.0.103' #Eriks network
+
 #host = '192.168.1.137'
 host = '192.168.0.121' # OG laptop at erik
 port = 10000
@@ -48,8 +48,3 @@ while True:
         system("sudo killall pigpiod")
         system("sudo pkill pigpiod")
         sys.exit()
-    
-    #direction = input()
-    #if direction:
-    #update(direction)
-    #tank.stop_servos()
