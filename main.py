@@ -37,7 +37,6 @@ while True:
             message = s.recvfrom(1024)
 
             direction = message[0].decode("utf-8")
-            print(direction)
         
             if(direction):
                 print(direction)

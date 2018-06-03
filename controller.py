@@ -22,6 +22,8 @@ class controller:
         self.hp = 0
         self.servos = []
         self.servo_timer = None
+        self.servo_timer = None
+        self.servo_timer_tower = None
         self.servo_direction = None
         self.t_servo_angle = 1500
 
@@ -41,15 +43,11 @@ class controller:
     
     def update(self):
        
-        print('update')
 
         if self.servo_timer:
-            if(time.time() - self.servo_timer) > 1:
+            if(time.time() - self.servo_timer) > 0.5:
                 self.stop_servos()
                 self.servo_timer = None
-
-                print('stop')
-
 
     def move(self, servo, pulse):
         """
@@ -62,10 +60,16 @@ class controller:
         (move each with function or move all servos in a dict/array
         
         """
+    
         self.pi.set_servo_pulsewidth(servo, pulse)
         self.servos.append(servo)
+        self.servo_time = time.time()
         return
 
+    def move_tower(self, servo, pulse):
+        
+        self.pi.set_servo_pulsewidth(servo, pulse)
+    
     def stop_servos(self):
         """
         Stops all servos which have been activated
@@ -96,25 +100,20 @@ class controller:
             elif direction == 'right':
                 self.move(self.r_servo, 2500)
                 self.move(self.l_servo, 2500)
-            elif direction == 'tower_left': 
+        else:
+            if direction == 'tower_right':
+                
+                if self.t_servo_angle > 550:
+                    self.t_servo_angle -= 50
+                    self.move_tower(self.t_servo, self.t_servo_angle) 
+
+            elif direction == 'tower_left':
                 
 
-                if (self.t_servo_angle > 500):
-                    self.move(self.t_servo, self.t_servo_angle -10)
-                    self.t_servo_angle -= 10
+                if self.t_servo_angle < 2450:
+                    self.t_servo_angle += 50
+                    self.move_tower(self.t_servo, self.t_servo_angle)
 
-            elif direction == 'tower_right':
-
-                if (self.t_servo_angle < 2500):
-                    self.move(self.t_servo, self.t_servo_angle + 10)
-                    self.t_servo_angle += 10
-        
-
-        else:
-            if direction == 't_right':
-                pass
-            elif direction == 't_left':
-                pass
             elif direction == 't_up':
                 pass
             elif direction == 't_down':
