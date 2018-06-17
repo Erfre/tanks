@@ -41,8 +41,9 @@ while True:
             if(direction):
                 print(direction)
                 tank.dir_listener(direction)
-            
-        tank.update()
+            else:
+                tank.stop_servos()
+       # tank.update()
 
     except (KeyboardInterrupt):
         system("sudo killall pigpiod")

@@ -1,4 +1,3 @@
-
 import pigpio
 from os import system
 import time
@@ -42,14 +41,14 @@ class controller:
         self.pi = pigpio.pi()
     
     def update(self):
-       
+        self.stop_servos()
 
-        if self.servo_timer:
-            if(time.time() - self.servo_timer) > 0.5:
-                self.stop_servos()
-                self.servo_timer = None
+       # if self.servo_timer:
+       #     if(time.time() - self.servo_timer) > 0.5:
+       #         self.stop_servos()
+       #         self.servo_timer = None
 
-    def move(self, servo, pulse):
+    def move(self, servo, pulse, dir):
         """
         Runs the servo for 1 second and then turn it off.
         :param servo:
@@ -62,12 +61,12 @@ class controller:
         """
     
         self.pi.set_servo_pulsewidth(servo, pulse)
-        self.servos.append(servo)
+        self.servos.append(dir)
         self.servo_time = time.time()
         return
 
     def move_tower(self, servo, pulse):
-        
+
         self.pi.set_servo_pulsewidth(servo, pulse)
     
     def stop_servos(self):
@@ -76,8 +75,8 @@ class controller:
         :param servo:
         :return:
         """
-        for servo in self.servos:
-            self.pi.set_servo_pulsewidth(servo, 0)
+        self.pi.set_servo_pulsewidth(self.r_servo, 0)
+        self.pi.set_servo_pulsewidth(self.l_servo, 0)
         self.servos = []
         return
 
@@ -89,17 +88,22 @@ class controller:
         """
         if '_' not in direction:
             if direction == 'down':
-                self.move(self.r_servo, 500)
-                self.move(self.l_servo, 2500)
+                self.move(self.r_servo, 900, direction)
+                self.move(self.l_servo, 2000, direction)
+
             elif direction == 'up':
-                self.move(self.r_servo, 2500)
-                self.move(self.l_servo, 500)
+                if 'right' or 'left' not in self.servos:
+                    self.move(self.r_servo, 2000, direction)
+                    self.move(self.l_servo, 900, direction)
+                elif 'right' in self.servos:
+                    self.move(self.l_servo, 2000, direction)
+                elif 'left' in self.servos:
+                    self.move(self.r_servo, 900, direction)
+
             elif direction == 'left':
-                self.move(self.l_servo, 500)
-                self.move(self.r_servo, 500)
+                self.move(self.l_servo, 500, direction)
             elif direction == 'right':
-                self.move(self.r_servo, 2500)
-                self.move(self.l_servo, 2500)
+                self.move(self.r_servo, 2500, direction)
         else:
             if direction == 'tower_right':
                 
@@ -120,12 +124,3 @@ class controller:
                 pass
         
         self.servo_timer = time.time()
-
-    def fire(self, fire):
-        """
-
-        :param fire:
-        :return:
-        """
-        if fire:
-            pass  #  activate laser
