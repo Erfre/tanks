@@ -28,15 +28,30 @@ def update(message):
     print(message)
     tank.dir_listener(message)
 
+def fix_data(msg_dcode):
+    """
+    Recives a string and checks the string for duplicates.
+    And removes them
+    :param message:
+    :return:
+    """
+    unique = list(set(msg_dcode.split()))
+    clean_data = ''
+    for word in unique:
+        clean_data += word
+
+    return clean_data
+
+
 tank = init()
 
 while True:
     try:
         ready = select.select([s], [], [], 0)
         if ready[0]:
-            message = s.recvfrom(1024)
+            message = s.recvfrom(1024) # recieve data
             print(message[0])
-            direction = message[0].decode("utf-8")
+            direction = fix_data(message[0].decode("utf-8"))
             if(direction):
                 print(direction)
                 if direction == 'stop':
