@@ -38,7 +38,8 @@ def fix_data(msg_dcode):
     unique = list(set(msg_dcode.split()))
     clean_data = ''
     for word in unique:
-        clean_data += word
+        if word is not 'stop':
+            clean_data += word
 
     return clean_data
 
@@ -54,7 +55,7 @@ while True:
             direction = fix_data(message[0].decode("utf-8"))
             if(direction):
                 print(direction)
-                if direction == 'stop':
+                if 'stop'in direction:
                     tank.stop_servos()
                     
                 tank.dir_listener(direction)
