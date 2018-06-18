@@ -12,9 +12,9 @@ tank_thread = None
 
 s  = socket.socket()
 
-#host = '192.168.0.103' #Eriks network
+host = '192.168.1.230' #Eriks network
 #host = '192.168.1.137'
-host = '192.168.0.121' # OG laptop at erik
+#host = '192.168.0.121' # OG laptop at erik
 port = 10000
 s.connect((host, port))
 s.setblocking(0)
@@ -35,14 +35,14 @@ while True:
         ready = select.select([s], [], [], 0)
         if ready[0]:
             message = s.recvfrom(1024)
-
+            print(message[0])
             direction = message[0].decode("utf-8")
-        
             if(direction):
                 print(direction)
+                if direction == 'stop':
+                    tank.stop_servos()
+                    
                 tank.dir_listener(direction)
-            else:
-                tank.stop_servos()
        # tank.update()
 
     except (KeyboardInterrupt):
