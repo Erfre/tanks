@@ -54,7 +54,7 @@ while True:
             #print(message[0])
             direction = fix_data(message[0].decode("utf-8"))
             if(direction):
-                #print(direction)
+                print(direction)
                 if 'stop'in direction:
                     tank.stop_servos()
                     

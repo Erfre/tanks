@@ -96,19 +96,29 @@ class controller:
             elif direction == 'up': 
                 if 'right' in self.servos:
                     print('here')
-                    self.move(self.l_servo, 2000, direction)
+                    self.move(self.l_servo, 900, direction)
+                    self.move(self.r_servo, 2500, direction)
                 elif 'left' in self.servos:
                     print('left')
+                    self.move(self.l_servo, 500, direction)
                     self.move(self.r_servo, 2000, direction)
                 else:
+                    # move them at the same speed.
                     self.move(self.r_servo, 2000, direction)
                     self.move(self.l_servo, 900, direction)
 
-
             elif direction == 'left':
-                self.move(self.l_servo, 500, direction)
+                if 'right' in self.servos:
+                    self.move(self.l_servo, 500, direction)
+                    self.move(self.r_servo, 500, direction)
+                else:
+                    self.move(self.l_servo, 500, direction)
             elif direction == 'right':
-                self.move(self.r_servo, 2500, direction)
+                if 'left' in self.servos:
+                    self.move(self.r_servo, 2500, direction)
+                    self.move(self.l_servo, 2500, direction)
+                else:
+                    self.move(self.r_servo, 2500, direction)
         else:
             if direction == 'tower_right':
                 
