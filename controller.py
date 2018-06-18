@@ -62,6 +62,7 @@ class controller:
     
         self.pi.set_servo_pulsewidth(servo, pulse)
         self.servos.append(dir)
+        self.servos = list(set(self.servos))
         self.servo_time = time.time()
         return
 
@@ -87,18 +88,22 @@ class controller:
         :return:
         """
         if '_' not in direction:
+            print(self.servos)
             if direction == 'down':
                 self.move(self.r_servo, 900, direction)
                 self.move(self.l_servo, 2000, direction)
 
-            elif direction == 'up':
-                if 'right' or 'left' not in self.servos:
-                    self.move(self.r_servo, 2000, direction)
-                    self.move(self.l_servo, 900, direction)
-                elif 'right' in self.servos:
+            elif direction == 'up': 
+                if 'right' in self.servos:
+                    print('here')
                     self.move(self.l_servo, 2000, direction)
                 elif 'left' in self.servos:
-                    self.move(self.r_servo, 900, direction)
+                    print('left')
+                    self.move(self.r_servo, 2000, direction)
+                else:
+                    self.move(self.r_servo, 2000, direction)
+                    self.move(self.l_servo, 900, direction)
+
 
             elif direction == 'left':
                 self.move(self.l_servo, 500, direction)

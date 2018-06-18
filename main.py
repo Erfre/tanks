@@ -51,10 +51,10 @@ while True:
         ready = select.select([s], [], [], 0)
         if ready[0]:
             message = s.recvfrom(1024) # recieve data
-            print(message[0])
+            #print(message[0])
             direction = fix_data(message[0].decode("utf-8"))
             if(direction):
-                print(direction)
+                #print(direction)
                 if 'stop'in direction:
                     tank.stop_servos()
                     
