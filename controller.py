@@ -88,32 +88,40 @@ class controller:
         :return:
         """
         if '_' not in direction:
-            print(self.servos)
-            if direction == 'down':
-                self.move(self.r_servo, 900, direction)
-                self.move(self.l_servo, 2000, direction)
+            #print(self.servos)
+            if 'up' in direction:
+                if 'left' in direction:
+                    # lower speed on left side
 
-            elif direction == 'up': 
-                if 'right' in self.servos:
-                    print('here')
-                    self.move(self.l_servo, 900, direction)
+                    self.move(self.l_servo, 1000, direction)
                     self.move(self.r_servo, 2500, direction)
-                elif 'left' in self.servos:
-                    print('left')
+                    print(self.servos)
+                elif 'right' in direction:
+                    # lower speed on right side
                     self.move(self.l_servo, 500, direction)
                     self.move(self.r_servo, 2000, direction)
                 else:
-                    # move them at the same speed.
                     self.move(self.r_servo, 2000, direction)
-                    self.move(self.l_servo, 900, direction)
-
-            elif direction == 'left':
+                    self.move(self.l_servo, 1000, direction)
+            elif 'down' in direction:
+                if 'left' in direction:
+                    # lower speed on left side
+                    self.move(self.l_servo, 2500, direction)
+                    self.move(self.r_servo, 900, direction)
+                elif 'right' in direction:
+                    # lower speed on right side
+                    self.move(self.l_servo, 2000, direction)
+                    self.move(self.r_servo, 500, direction)
+                else:
+                    self.move(self.r_servo, 900, direction)
+                    self.move(self.l_servo, 2000, direction)
+            elif 'left' in direction:
                 if 'right' in self.servos:
                     self.move(self.l_servo, 500, direction)
                     self.move(self.r_servo, 500, direction)
                 else:
                     self.move(self.l_servo, 500, direction)
-            elif direction == 'right':
+            elif 'right' in direction:
                 if 'left' in self.servos:
                     self.move(self.r_servo, 2500, direction)
                     self.move(self.l_servo, 2500, direction)
