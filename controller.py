@@ -105,7 +105,7 @@ class controller:
             # right
             self.move(self.r_servo, 2500)
 
-        if not any(direction.itervalues()):
+        if all(value == 0 for value in direction.values()):
             self.move(self.r_servo, 0)
             self.move(self.l_servo, 0)
 
