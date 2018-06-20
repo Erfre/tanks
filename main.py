@@ -1,18 +1,16 @@
 from controller import controller
+import json
 import socket
-from time import sleep
-import select
 from os import system
-import threading
 import sys
 import select
-import time
+
 tank_thread = None
 
 
 s  = socket.socket()
 
-host = '192.168.1.230' #Eriks network
+host = '192.168.0.103' #Eriks network
 #host = '192.168.1.137'
 #host = '192.168.0.121' # OG laptop at erik
 port = 10000
@@ -28,20 +26,15 @@ def update(message):
     print(message)
     tank.dir_listener(message)
 
-def fix_data(msg_dcode):
+def fix_data(dir):
     """
     Recives a string and checks the string for duplicates.
     And removes them
     :param message:
     :return:
     """
-    unique = list(set(msg_dcode.split()))
-    clean_data = ''
-    for word in unique:
-        if word is not 'stop':
-            clean_data += word
-
-    return clean_data
+    #for key in dir:
+       # if dir[]
 
 
 tank = init()
@@ -51,15 +44,9 @@ while True:
         ready = select.select([s], [], [], 0)
         if ready[0]:
             message = s.recvfrom(1024) # recieve data
-            #print(message[0])
-            direction = fix_data(message[0].decode("utf-8"))
-            if(direction):
-                print(direction)
-                if 'stop'in direction:
-                    tank.stop_servos()
-                    
-                tank.dir_listener(direction)
-       # tank.update()
+            print(message[0])
+            inputs = json.loads(message[0].decode("utf-8"))
+            tank.dir_listener(inputs)
 
     except (KeyboardInterrupt):
         system("sudo killall pigpiod")
