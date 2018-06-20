@@ -91,12 +91,12 @@ class controller:
 
         if direction['38']:
             #up
-            self.move(self.l_servo, 1800)
-            self.move(self.r_servo, 1200)
-        if direction['40']:
-            # down
             self.move(self.l_servo, 1200)
             self.move(self.r_servo, 1800)
+        if direction['40']:
+            # down
+            self.move(self.l_servo, 1800)
+            self.move(self.r_servo, 1200)
         if direction['37']:
             # turn left
             self.move(self.l_servo, 500)
@@ -108,64 +108,3 @@ class controller:
         if all(value == 0 for value in direction.values()):
             self.move(self.r_servo, 0)
             self.move(self.l_servo, 0)
-
-        # if '_' not in direction:
-        #     #print(self.servos)
-        #     if 'up' in direction:
-        #         if 'left' in direction:
-        #             # lower speed on left side
-        #
-        #             self.move(self.l_servo, 1200, direction)
-        #             self.move(self.r_servo, 2500, direction)
-        #             #print(self.servos)
-        #         elif 'right' in direction:
-        #             # lower speed on right side
-        #             self.move(self.l_servo, 500, direction)
-        #             self.move(self.r_servo, 1800, direction)
-        #         else:
-        #             self.move(self.r_servo, 1800, direction)
-        #             self.move(self.l_servo, 1200, direction)
-        #     elif 'down' in direction:
-        #         if 'left' in direction:
-        #             # lower speed on left side
-        #             self.move(self.l_servo, 2500, direction)
-        #             self.move(self.r_servo, 1200, direction)
-        #         elif 'right' in direction:
-        #             # lower speed on right side
-        #             self.move(self.l_servo, 1800, direction)
-        #             self.move(self.r_servo, 500, direction)
-        #         else:
-        #             self.move(self.r_servo, 1200, direction)
-        #             self.move(self.l_servo, 1800, direction)
-        #     elif 'left' in direction:
-        #         if 'right' in self.servos:
-        #             self.move(self.l_servo, 2500, direction)
-        #             self.move(self.r_servo, 2500, direction)
-        #         else:
-        #             self.move(self.l_servo, 500, direction)
-        #     elif 'right' in direction:
-        #         if 'left' in self.servos:
-        #             self.move(self.r_servo, 500, direction)
-        #             self.move(self.l_servo, 500, direction)
-        #         else:
-        #             self.move(self.r_servo, 2500, direction)
-        # else:
-        #     if direction == 'tower_right':
-        #
-        #         if self.t_servo_angle > 550:
-        #             self.t_servo_angle -= 50
-        #             self.move_tower(self.t_servo, self.t_servo_angle)
-        #
-        #     elif direction == 'tower_left':
-        #
-        #
-        #         if self.t_servo_angle < 2450:
-        #             self.t_servo_angle += 50
-        #             self.move_tower(self.t_servo, self.t_servo_angle)
-        #
-        #     elif direction == 't_up':
-        #         pass
-        #     elif direction == 't_down':
-        #         pass
-        #
-        # self.servo_timer = time.time()

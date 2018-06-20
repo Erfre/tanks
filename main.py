@@ -10,7 +10,7 @@ tank_thread = None
 
 s  = socket.socket()
 
-host = '192.168.1.230' #Eriks network
+host = '192.168.0.103' #Eriks network
 #host = '192.168.1.137'
 #host = '192.168.0.121' # OG laptop at erik
 port = 10000
