@@ -88,6 +88,13 @@ class controller:
         :param direction: Dictionary
         :return:
         """
+        if direction['37']:
+            # turn left
+            self.move(self.l_servo, 500)
+
+        if direction['39']:
+            # right
+            self.move(self.r_servo, 2500)
 
         if direction['38']:
             #up
@@ -97,13 +104,6 @@ class controller:
             # down
             self.move(self.l_servo, 1800)
             self.move(self.r_servo, 1200)
-        if direction['37']:
-            # turn left
-            self.move(self.l_servo, 500)
-
-        if direction['39']:
-            # right
-            self.move(self.r_servo, 2500)
 
         if all(value == 0 for value in direction.values()):
             self.move(self.r_servo, 0)
