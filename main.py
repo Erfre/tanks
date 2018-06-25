@@ -45,9 +45,12 @@ while True:
         if ready[0]:
             message = s.recvfrom(1024) # recieve data
             test = (message[0].decode("utf-8"))
-            inputs = json.loads(test)
-            print(inputs,type(inputs),len(inputs))
-            tank.dir_listener(inputs)
+            try:
+                inputs = json.loads(test)
+                print(inputs,type(inputs),len(inputs))
+                tank.dir_listener(inputs)
+            except json.decoder.JSONDecodeError():
+                print('Json error')
 
     except (KeyboardInterrupt):
         system("sudo killall pigpiod")
