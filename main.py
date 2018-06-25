@@ -55,7 +55,7 @@ while True:
                     tank.dir_listener(inputs)
 
             else:
-                inputs = json.loads(clean_data)
+                inputs = json.loads(clean_data[0])
                 tank.dir_listener(inputs)
 
 
