@@ -37,7 +37,8 @@ def fix_data(data):
     """
     dict_list = data.split('\n')
     dict_list.pop()
-    return data
+    return dict_list
+
 
 tank = init()
 
@@ -48,14 +49,13 @@ while True:
             message = s.recvfrom(1024) # recieve data
             data = (message[0].decode("utf-8"))
             clean_data = fix_data(data)
-            #print(len(test), type(test))
             if len(clean_data) > 1:
                 for direction in clean_data:
                     inputs = json.loads(direction) #convert to dict
                     tank.dir_listener(inputs)
 
             else:
-                inputs = json.loads(clean_data[0])
+                inputs = json.loads(clean_data)
                 tank.dir_listener(inputs)
 
 
@@ -63,8 +63,3 @@ while True:
         system("sudo killall pigpiod")
         system("sudo pkill pigpiod")
         sys.exit()
-    
-    #direction = input()
-    #if direction:
-    #update(direction)
-    #tank.stop_servos()
