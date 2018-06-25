@@ -49,23 +49,15 @@ while True:
             data = (message[0].decode("utf-8"))
             clean_data = fix_data(data)
             #print(len(test), type(test))
-            try:
-                if len(clean_data) > 1:
-                    for direction in clean_data:
-                        inputs = json.loads(direction) #convert to dict
-                        tank.dir_listener(inputs)
-
-                else:
-                    inputs = json.loads(clean_data[0])
+            if len(clean_data) > 1:
+                for direction in clean_data:
+                    inputs = json.loads(direction) #convert to dict
                     tank.dir_listener(inputs)
-                #inputs = json.loads(test)
-                #print(inputs)
-               # print(inputs,type(inputs),len(inputs))
-                #tank.dir_listener(inputs)
-            except json.decoder.JSONDecodeError:
-              ###  inputs, dump = json.loads(test)
-                print(json.decoder.JSONDecodeError)
-                #tank.dir_listener(inputs)
+
+            else:
+                inputs = json.loads(clean_data[0])
+                tank.dir_listener(inputs)
+
 
     except (KeyboardInterrupt):
         system("sudo killall pigpiod")
