@@ -10,7 +10,7 @@ tank_thread = None
 
 s  = socket.socket()
 
-host = '192.168.1.230' #Eriks network
+host = '192.168.1.64' #Eriks network
 #host = '192.168.1.137'
 #host = '192.168.0.121' # OG laptop at erik
 port = 10000
@@ -20,6 +20,8 @@ input = [s]
 def init():
     tank = controller(17,27,22, None, None)
     tank.start(3)
+    msg = "start"
+    s.send(msg.encode())
     return tank
 
 def update(message):
@@ -28,14 +30,12 @@ def update(message):
 
 def fix_data(dir):
     """
-    Recives a string and checks the string for duplicates.
-    And removes them
+    Recives a dict and removes duplicates.
+    
     :param message:
     :return:
     """
-    #for key in dir:
-       # if dir[]
-
+   # if dir
 
 tank = init()
 
@@ -44,8 +44,9 @@ while True:
         ready = select.select([s], [], [], 0)
         if ready[0]:
             message = s.recvfrom(1024) # recieve data
-            print(message[0])
-            inputs = json.loads(message[0].decode("utf-8"))
+            test = (message[0].decode("utf-8"))
+            inputs = json.loads(test)
+            print(inputs,type(inputs),len(inputs))
             tank.dir_listener(inputs)
 
     except (KeyboardInterrupt):
