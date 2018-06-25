@@ -10,7 +10,7 @@ tank_thread = None
 
 s  = socket.socket()
 
-host = '192.168.1.64' #Eriks network
+host = '192.168.0.103' #Eriks network
 #host = '192.168.1.137'
 #host = '192.168.0.121' # OG laptop at erik
 port = 10000
@@ -43,15 +43,18 @@ while True:
     try:
         ready = select.select([s], [], [], 0)
         if ready[0]:
-            message = s.recvfrom(1024) # recieve data
+            message = s.recvfrom() # recieve data
             test = (message[0].decode("utf-8"))
+            print(len(test), type(test))
             try:
                 inputs = json.loads(test)
-                print(inputs,type(inputs),len(inputs))
-                tank.dir_listener(inputs)
-            except json.decoder.JSONdecodeError:
-                inputs, dump = json.loads(test)
-                tank.dir_listener(inputs)
+                print(inputs)
+               # print(inputs,type(inputs),len(inputs))
+                #tank.dir_listener(inputs)
+            except json.decoder.JSONDecodeError:
+              ###  inputs, dump = json.loads(test)
+                print(json.decoder.JSONDecodeError)
+                #tank.dir_listener(inputs)
 
     except (KeyboardInterrupt):
         system("sudo killall pigpiod")
