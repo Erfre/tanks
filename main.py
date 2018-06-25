@@ -49,8 +49,9 @@ while True:
                 inputs = json.loads(test)
                 print(inputs,type(inputs),len(inputs))
                 tank.dir_listener(inputs)
-            except json.decoder.JSONDecodeError():
-                print('Json error')
+            except json.decoder.JSONdecodeError:
+                inputs, dump = json.loads(test)
+                tank.dir_listener(inputs)
 
     except (KeyboardInterrupt):
         system("sudo killall pigpiod")
