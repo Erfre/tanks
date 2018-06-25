@@ -28,14 +28,16 @@ def update(message):
     print(message)
     tank.dir_listener(message)
 
-def fix_data(dir):
+def fix_data(data):
     """
     Recives a dict and removes duplicates.
     
     :param message:
     :return:
     """
-   # if dir
+    dict_list = data.split('\n')
+    dict_list.pop()
+    return data
 
 tank = init()
 
@@ -43,12 +45,21 @@ while True:
     try:
         ready = select.select([s], [], [], 0)
         if ready[0]:
-            message = s.recvfrom() # recieve data
-            test = (message[0].decode("utf-8"))
-            print(len(test), type(test))
+            message = s.recvfrom(1024) # recieve data
+            data = (message[0].decode("utf-8"))
+            clean_data = fix_data(data)
+            #print(len(test), type(test))
             try:
-                inputs = json.loads(test)
-                print(inputs)
+                if len(clean_data) > 1:
+                    for direction in clean_data:
+                        inputs = json.loads(direction) #convert to dict
+                        tank.dir_listener(inputs)
+
+                else:
+                    inputs = json.loads(clean_data[0])
+                    tank.dir_listener(inputs)
+                #inputs = json.loads(test)
+                #print(inputs)
                # print(inputs,type(inputs),len(inputs))
                 #tank.dir_listener(inputs)
             except json.decoder.JSONDecodeError:
