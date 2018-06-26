@@ -43,10 +43,6 @@ class controller:
     def update(self):
         self.stop_servos()
 
-       # if self.servo_timer:
-       #     if(time.time() - self.servo_timer) > 0.5:
-       #         self.stop_servos()
-       #         self.servo_timer = None
 
     def move(self, servo, pulse):
         """
@@ -81,6 +77,19 @@ class controller:
         self.servos = []
         return
 
+    def fire(self):
+        """
+        moves the tank tank back and then forward
+        :return:
+        """
+        # might want to check the timer for servos?
+        self.move(self.l_servo, 2500)
+        self.move(self.r_servo, 500)
+        # maybe a delay here, try a sleep one
+        self.move(self.l_servo, 500)
+        self.move(self.r_servo, 2500)
+        self.stop_servos()
+
 
     def dir_listener(self, direction):
         """
@@ -88,21 +97,34 @@ class controller:
         :param direction: Dictionary
         :return:
         """
-        if direction['38']:
+        if direction['32']:
+            #if the tank shoots move it back
+            self.fire()
+
+        if direction['87']:
             #up
-            self.move(self.l_servo, 500)
-            self.move(self.r_servo, 2500)
-        if direction['40']:
+            self.move(self.l_servo, 1000)
+            self.move(self.r_servo, 2000)
+        if direction['83']:
             # down
-            self.move(self.l_servo, 1550)
-            self.move(self.r_servo, 1450)
-        if direction['37']:
+            self.move(self.l_servo, 2000)
+            self.move(self.r_servo, 1000)
+        if direction['65']:
             # turn left
             self.move(self.l_servo, 2500)
 
-        if direction['39']:
+        if direction['68']:
             # right
             self.move(self.r_servo, 500)
+
+        if direction['37']:
+            #tower left increase
+            #self.move(self.t_servo,)
+            pass
+        if direction['39']:
+            #tower right
+            #self.move(self.t_servo,)
+            pass
 
         if all(value == 0 for value in direction.values()):
             self.move(self.r_servo, 0)
