@@ -8,7 +8,7 @@ import select
 tank_thread = None
 
 
-s  = socket.socket()
+s = socket.socket()
 
 host = '192.168.0.103' #Eriks network
 #host = '192.168.1.137'
