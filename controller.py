@@ -25,6 +25,7 @@ class controller:
         self.servo_timer_tower = None
         self.servo_direction = None
         self.t_servo_angle = 1500
+        self.t_servo_degree = 0
 
         #self.move(self.t_servo, self.t_servo_angle)
 
@@ -85,10 +86,20 @@ class controller:
         # might want to check the timer for servos?
         self.move(self.l_servo, 2500)
         self.move(self.r_servo, 500)
+        time.sleep(0.2)
+        self.stop_servos()
         # maybe a delay here, try a sleep one
         self.move(self.l_servo, 500)
         self.move(self.r_servo, 2500)
+        time.sleep(0.1)
         self.stop_servos()
+
+    def move_tower(self, degree):
+        """
+        Moves the tower in degrees which are converted from the servo pulse
+        :return:
+        """
+        pass
 
 
     def dir_listener(self, direction):
@@ -105,17 +116,21 @@ class controller:
             #up
             self.move(self.l_servo, 1000)
             self.move(self.r_servo, 2000)
+        else:
+            self.stop_servos()
         if direction['83']:
             # down
             self.move(self.l_servo, 2000)
             self.move(self.r_servo, 1000)
+        else:
+            self.stop_servos()
         if direction['65']:
             # turn left
-            self.move(self.l_servo, 2500)
+            self.move(self.r_servo, 500)
 
         if direction['68']:
             # right
-            self.move(self.r_servo, 500)
+            self.move(self.l_servo, 2500)
 
         if direction['37']:
             #tower left increase

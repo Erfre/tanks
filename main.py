@@ -63,3 +63,10 @@ while True:
         system("sudo killall pigpiod")
         system("sudo pkill pigpiod")
         sys.exit()
+
+    except:
+        system("sudo killall pigpiod")
+        system("sudo pkill pigpiod")
+        sys.exit()
+
+
