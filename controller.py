@@ -41,9 +41,6 @@ class controller:
         self.hp = hp
         self.pi = pigpio.pi()
     
-    def update(self):
-        self.stop_servos()
-
 
     def move(self, servo, pulse):
         """
@@ -109,14 +106,12 @@ class controller:
 
         if direction['87']:
             #up
-            self.move(self.l_servo, 1000)
-            self.move(self.r_servo, 2000)
-        else:
-            self.stop_servos()
-        if direction['83']:
-            # down
             self.move(self.l_servo, 2000)
             self.move(self.r_servo, 1000)
+        elif direction['83']:
+            # down
+            self.move(self.l_servo, 1000)
+            self.move(self.r_servo, 2000)
         else:
             self.stop_servos()
         if direction['65']:
