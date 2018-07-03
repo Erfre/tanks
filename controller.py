@@ -52,20 +52,12 @@ class controller:
         :param pulse:
         :return:
         """
-        """TODO see what works best when tower servo is in place
-        (move each with function or move all servos in a dict/array
-        
-        """
     
         self.pi.set_servo_pulsewidth(servo, pulse)
         #self.servos.append(dir)
         self.servos = list(set(self.servos))
         #self.servo_time = time.time()
         return
-
-    def move_tower(self, servo, pulse):
-
-        self.pi.set_servo_pulsewidth(servo, pulse)
     
     def stop_servos(self):
         """
@@ -94,12 +86,15 @@ class controller:
         time.sleep(0.1)
         self.stop_servos()
 
-    def move_tower(self, degree):
+    def move_tower(self, pulse):
         """
         Moves the tower in degrees which are converted from the servo pulse
         :return:
         """
-        pass
+        #servo_pulse = 11
+        self.t_servo_angle = self.t_servo_angle + pulse
+        if self.t_servo_angle < 2500 or self.t_servo_angle > 500:
+            self.move(self.t_servo, self.t_servo_angle)
 
 
     def dir_listener(self, direction):
@@ -135,11 +130,14 @@ class controller:
         if direction['37']:
             #tower left increase
             #self.move(self.t_servo,)
+            self.move_tower(-11)
             pass
         if direction['39']:
             #tower right
             #self.move(self.t_servo,)
+            self.move_tower(11)
             pass
+        # first move tower
 
         if all(value == 0 for value in direction.values()):
             self.move(self.r_servo, 0)
