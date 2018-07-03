@@ -1,4 +1,5 @@
 import pigpio
+import threading
 from os import system
 import time
 class controller:
@@ -21,11 +22,10 @@ class controller:
         self.hp = 0
         self.servos = []
         self.servo_timer = None
-        self.servo_timer = None
         self.servo_timer_tower = None
         self.servo_direction = None
+        self.tower_thread = None
         self.t_servo_angle = 1500
-        self.t_servo_degree = 0
 
         #self.move(self.t_servo, self.t_servo_angle)
 
@@ -55,7 +55,32 @@ class controller:
         self.servos = list(set(self.servos))
         #self.servo_time = time.time()
         return
-    
+
+    def thread_tower(self, pulse):
+        """
+        Moves the tower in degrees which are converted from the servo pulse
+        :return:
+        """
+        #servo_pulse = 11
+
+        while True:
+            self.t_servo_angle = self.t_servo_angle + pulse
+            if self.t_servo_angle < 2500 or self.t_servo_angle > 500:
+                self.move(self.t_servo, self.t_servo_angle)
+            else:
+                print('No more moves in this direction')
+            pulse += pulse
+
+    def move_tower(self, pulse):
+        """
+        Moves the tower in degrees which are converted from the servo pulse
+        :return:
+        """
+        #servo_pulse = 11
+        self.t_servo_angle = self.t_servo_angle + pulse
+        if self.t_servo_angle < 2500 or self.t_servo_angle > 500:
+            self.move(self.t_servo, self.t_servo_angle)
+
     def stop_servos(self):
         """
         Stops all servos which have been activated
@@ -83,15 +108,7 @@ class controller:
         time.sleep(0.1)
         self.stop_servos()
 
-    def move_tower(self, pulse):
-        """
-        Moves the tower in degrees which are converted from the servo pulse
-        :return:
-        """
-        #servo_pulse = 11
-        self.t_servo_angle = self.t_servo_angle + pulse
-        if self.t_servo_angle < 2500 or self.t_servo_angle > 500:
-            self.move(self.t_servo, self.t_servo_angle)
+
 
 
     def dir_listener(self, direction):
@@ -116,23 +133,26 @@ class controller:
             self.stop_servos()
         if direction['65']:
             # turn left
-            self.move(self.r_servo, 500)
+            self.move(self.l_servo, 2500)
 
         if direction['68']:
             # right
-            self.move(self.l_servo, 2500)
+            self.move(self.r_servo, 500)
 
         if direction['37']:
             #tower left increase
             #self.move(self.t_servo,)
-            self.move_tower(-11)
-            pass
+            self.tower_thread = threading.Thread(target=self.thread_tower, args=(11,)).start()
+            #self.move_tower(11)
+        elif direction['37']:
+            self.tower_thread._stop()
+            #stop thread
         if direction['39']:
             #tower right
             #self.move(self.t_servo,)
-            self.move_tower(11)
-            pass
-        # first move tower
+            self.move_tower(-11)
+        elif direction['39']:
+            #stop thread
 
         if all(value == 0 for value in direction.values()):
             self.move(self.r_servo, 0)
