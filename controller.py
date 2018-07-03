@@ -64,11 +64,12 @@ class controller:
         #servo_pulse = 11
 
         while True:
-            self.t_servo_angle = self.t_servo_angle + pulse
+            self.t_servo_angle += pulse
             if self.t_servo_angle < 2500 or self.t_servo_angle > 500:
                 self.move(self.t_servo, self.t_servo_angle)
             else:
                 print('No more moves in this direction')
+                return
             pulse += pulse
 
     def move_tower(self, pulse):
@@ -133,11 +134,11 @@ class controller:
             self.stop_servos()
         if direction['65']:
             # turn left
-            self.move(self.l_servo, 2500)
+            self.move(self.l_servo, 500)
 
         if direction['68']:
             # right
-            self.move(self.r_servo, 500)
+            self.move(self.r_servo, 2500)
 
         if direction['37']:
             #tower left increase
