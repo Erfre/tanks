@@ -111,7 +111,6 @@ class controller:
 
 
 
-
     def dir_listener(self, direction):
         """
 
@@ -143,17 +142,19 @@ class controller:
         if direction['37']:
             #tower left increase
             #self.move(self.t_servo,)
-            self.tower_thread = threading.Thread(target=self.thread_tower, args=(11,)).start()
-            #self.move_tower(11)
+            #self.tower_thread = threading.Thread(target=self.thread_tower, args=(11,)).start()
+            self.move_tower(11)
         elif direction['37']:
-            self.tower_thread._stop()
+            #self.tower_thread._stop()
             #stop thread
+            pass
         if direction['39']:
             #tower right
             #self.move(self.t_servo,)
             self.move_tower(-11)
         elif direction['39']:
             #stop thread
+            pass
 
         if all(value == 0 for value in direction.values()):
             self.move(self.r_servo, 0)

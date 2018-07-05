@@ -10,13 +10,12 @@ tank_thread = None
 
 s = socket.socket()
 
-host = '192.168.0.101' #Eriks network
-#host = '192.168.1.137'
-#host = '192.168.0.121' # OG laptop at erik
+host = '192.168.0.101'  # ip of server
 port = 10000
 s.connect((host, port))
 s.setblocking(0)
-input = [s]
+#input = [s]
+
 def init():
     tank = controller(17,27,22, None, None)
     tank.start(3)
@@ -52,7 +51,7 @@ while True:
             if len(clean_data) > 1:
                 for direction in clean_data:
                     inputs = json.loads(direction) #convert to dict
-                    tank.dir_listener(inputs)
+                    tank.dir_listener(inputs) #TODO loop the dir_listener
 
             else:
                 inputs = json.loads(clean_data[0])
