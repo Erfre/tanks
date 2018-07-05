@@ -1,8 +1,10 @@
-
 import pigpio
+import threading
 from os import system
 import time
-class controller:
+
+
+class controller():
     """The tank class"""
     def __init__(self, right_servo, left_servo, tower_servo, cannon_servo, laser):
         """
@@ -22,9 +24,9 @@ class controller:
         self.hp = 0
         self.servos = []
         self.servo_timer = None
-        self.servo_timer = None
         self.servo_timer_tower = None
         self.servo_direction = None
+        self.tower_thread = None
         self.t_servo_angle = 1500
 
         #self.move(self.t_servo, self.t_servo_angle)
@@ -37,22 +39,10 @@ class controller:
         :return:
         """
         system("sudo pigpiod")
-       # system(r"""uv4l -nopreview --auto-video_nr --driver raspicam --encoding
-       # mjpeg --width 640 --height 480 --framerate 20 --hflip=yes --vflip=yes
-       # --bitrate=2000000 --server-option '--port=8080' --server-option
-       # '--max-queued-connections=30' --server-option '--max-streams=25'
-       # --server-option '--max-threads=29'""")
         print("Livestream and pigpiod started.")
         self.hp = hp
         self.pi = pigpio.pi()
     
-    def update(self):
-       
-
-        if self.servo_timer:
-            if(time.time() - self.servo_timer) > 0.5:
-                self.stop_servos()
-                self.servo_timer = None
 
     def move(self, servo, pulse):
         """
@@ -61,15 +51,38 @@ class controller:
         :param pulse:
         :return:
         """
-        """TODO see what works best when tower servo is in place
-        (move each with function or move all servos in a dict/array
-        
-        """
-    
+
         self.pi.set_servo_pulsewidth(servo, pulse)
-        self.servos.append(servo)
-        self.servo_time = time.time()
+        #self.servos.append(dir)
+        self.servos = list(set(self.servos))
+        #self.servo_time = time.time()
         return
+
+    def thread_tower(self, pulse):
+        """
+        Moves the tower in degrees which are converted from the servo pulse
+        :return:
+        """
+        #servo_pulse = 11
+
+        while True:
+            self.t_servo_angle += pulse
+            if self.t_servo_angle < 2500 or self.t_servo_angle > 500:
+                self.move(self.t_servo, self.t_servo_angle)
+            else:
+                print('No more moves in this direction')
+                return
+            pulse += pulse
+
+    def move_tower(self, pulse):
+        """
+        Moves the tower in degrees which are converted from the servo pulse
+        :return:
+        """
+        #servo_pulse = 11
+        self.t_servo_angle = self.t_servo_angle + pulse
+        if self.t_servo_angle < 2500 or self.t_servo_angle > 500:
+            self.move(self.t_servo, self.t_servo_angle)
 
     def stop_servos(self):
         """
@@ -77,42 +90,73 @@ class controller:
         :param servo:
         :return:
         """
-        for servo in self.servos:
-            self.pi.set_servo_pulsewidth(servo, 0)
+
+        self.pi.set_servo_pulsewidth(self.r_servo, 0)
+        self.pi.set_servo_pulsewidth(self.l_servo, 0)
         self.servos = []
         return
+
+    def fire(self):
+        """
+        moves the tank tank back and then forward
+        :return:
+        """
+        # might want to check the timer for servos?
+        self.move(self.l_servo, 2500)
+        self.move(self.r_servo, 500)
+        time.sleep(0.2)
+        self.stop_servos()
+        # maybe a delay here, try a sleep one
+        self.move(self.l_servo, 500)
+        self.move(self.r_servo, 2500)
+        time.sleep(0.1)
+        self.stop_servos()
 
     def dir_listener(self, direction):
         """
 
-        :param direction:
+        :param direction: Dictionary
         :return:
         """
-        if '_' not in direction:
-            if direction == 'down':
-                self.move(self.r_servo, 500)
-                self.move(self.l_servo, 2500)
-            elif direction == 'up':
-                self.move(self.r_servo, 2500)
-                self.move(self.l_servo, 500)
-            elif direction == 'left':
-                self.move(self.l_servo, 500)
-                self.move(self.r_servo, 500)
-            elif direction == 'right':
-                self.move(self.r_servo, 2500)
-                self.move(self.l_servo, 2500)
+        if direction['32']:
+            #if the tank shoots move it back
+            self.fire()
+
+        if direction['87']:
+            #up
+            self.move(self.l_servo, 2000)
+            self.move(self.r_servo, 1000)
+        elif direction['83']:
+            # down
+            self.move(self.l_servo, 1000)
+            self.move(self.r_servo, 2000)
         else:
-            if direction == 'tower_right':
-                if self.t_servo_angle > 550:
-                    self.t_servo_angle -= 50
-                    self.move(self.t_servo, self.t_servo_angle) 
-            elif direction == 'tower_left':
-                if self.t_servo_angle < 2450:
-                    self.t_servo_angle += 50  
-                    self.mover(self.t_servo, self.t_servo_angle)
-            elif direction == 't_up':
-                pass
-            elif direction == 't_down':
-                pass
-        
-        self.servo_timer = time.time()
+            self.stop_servos()
+        if direction['65']:
+            # turn left
+            self.move(self.l_servo, 500)
+
+        if direction['68']:
+            # right
+            self.move(self.r_servo, 2500)
+
+        if direction['37']:
+            #tower left increase
+            #self.move(self.t_servo,)
+            #self.tower_thread = threading.Thread(target=self.thread_tower, args=(11,)).start()
+            self.move_tower(11)
+        elif direction['37']:
+            #self.tower_thread._stop()
+            #stop thread
+            pass
+        if direction['39']:
+            #tower right
+            #self.move(self.t_servo,)
+            self.move_tower(-11)
+        elif direction['39']:
+            #stop thread
+            pass
+
+        if all(value == 0 for value in direction.values()):
+            self.move(self.r_servo, 0)
+            self.move(self.l_servo, 0)
