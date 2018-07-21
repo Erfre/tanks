@@ -28,9 +28,11 @@ def update(message):
 
 def fix_data(data):
     """
-    Recives a dict and removes duplicates.
+    When recieving queued up data it splits it into a list.
+    Splits the data after the newline and pops out the last data which is a
+    empty string and returns it.
     
-    :param message:
+    :param message: 
     :return:
     """
     dict_list = data.split('\n')

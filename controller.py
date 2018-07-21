@@ -143,7 +143,6 @@ class controller():
         if direction['37']:
             #tower left increase
             #self.move(self.t_servo,)
-            #self.tower_thread = threading.Thread(target=self.thread_tower, args=(11,)).start()
             self.move_tower(11)
         elif direction['37']:
             #self.tower_thread._stop()
@@ -158,5 +157,4 @@ class controller():
             pass
 
         if all(value == 0 for value in direction.values()):
-            self.move(self.r_servo, 0)
-            self.move(self.l_servo, 0)
+            self.stop_servos()
