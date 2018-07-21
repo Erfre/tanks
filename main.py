@@ -4,19 +4,16 @@ import socket
 from os import system
 import sys
 import select
-
-tank_thread = None
-
+import time
 
 s = socket.socket()
 
-host = '192.168.0.101' #Eriks network
-#host = '192.168.1.137'
-#host = '192.168.0.121' # OG laptop at erik
+host = '192.168.12.1' # Server ip
 port = 10000
 s.connect((host, port))
 s.setblocking(0)
 input = [s]
+
 def init():
     tank = controller(17,27,22, None, None)
     tank.start(3)
@@ -35,8 +32,11 @@ def fix_data(data):
     :param message:
     :return:
     """
+    
+    
     dict_list = data.split('\n')
     dict_list.pop()
+    
     return dict_list
 
 
@@ -47,16 +47,22 @@ while True:
         ready = select.select([s], [], [], 0)
         if ready[0]:
             message = s.recvfrom(1024) # recieve data
+            print(message)            
             data = (message[0].decode("utf-8"))
+            #tank.dir_listener(mouse = int(message[0]))
             clean_data = fix_data(data)
+
+            print(type(clean_data))
             if len(clean_data) > 1:
                 for direction in clean_data:
                     inputs = json.loads(direction) #convert to dict
-                    tank.dir_listener(inputs)
+                    
+                    tank.dir_listener(direction = inputs)
+
 
             else:
                 inputs = json.loads(clean_data[0])
-                tank.dir_listener(inputs)
+                tank.dir_listener(direction = inputs)
 
 
     except (KeyboardInterrupt):
